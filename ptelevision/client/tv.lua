@@ -41,24 +41,29 @@ function BroadcastMenu()
 end 
 
 function WebBrowserMenu()
+    lib.hideMenu()
     local input = lib.inputDialog('Web Browser', {'URL:'})
 
-    if not input then OpenTVMenu() end
-    TriggerServerEvent("ptelevision:event", GetClosestScreen().net_id, "ptv_status", {
-        type = "browser",
-        url = input[1]
-    })
-    OpenTVMenu()
+    if input then 
+        TriggerServerEvent("ptelevision:event", GetClosestScreen().net_id, "ptv_status", {
+            type = "browser",
+            url = input[1]
+        })
+    end
+    Citizen.Wait(300) 
+    OpenTVMenu() 
 end
 
 function VideoMenu()
+    lib.hideMenu()
     local input = lib.inputDialog('Video Player', {'URL:'})
-
-    if not input then OpenTVMenu() end
-    TriggerServerEvent("ptelevision:event", GetClosestScreen().net_id, "ptv_status", {
-        type = "play",
-        url = input[1]
-    })
+    if input then 
+        TriggerServerEvent("ptelevision:event", GetClosestScreen().net_id, "ptv_status", {
+            type = "play",
+            url = input[1]
+        })
+    end
+    Citizen.Wait(300) 
     OpenTVMenu()
 end
 

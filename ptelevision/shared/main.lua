@@ -1,3 +1,5 @@
+Inventory = exports.ox_inventory
+
 function DumpArray(obj, seen)
     if type(obj) ~= 'table' then return obj end
     if seen and seen[obj] then return seen[obj] end

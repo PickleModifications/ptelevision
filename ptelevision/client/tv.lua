@@ -148,7 +148,7 @@ end
 
 function GetTelevisionLocal(coords)
     for k,v in pairs(TelevisionsLocal) do 
-        if #(vec3(v.coords) - vec3(coords)) < 0.01 then
+        if #(v3(v.coords) - v3(coords)) < 0.01 then
             return k, v
         end
     end
@@ -180,7 +180,7 @@ RegisterNetEvent("ptelevision:event", function(data, index, key, value)
     Televisions = data
     local data = Televisions[index]
     local screen = CURRENT_SCREEN
-    if (screen and #(vec3(screen.coords) - vec3(data.coords)) < 0.001) then 
+    if (screen and #(v3(screen.coords) - v3(data.coords)) < 0.001) then 
         local index, data = GetTelevision(screen.coords)
         if (index) then 
             local event = value

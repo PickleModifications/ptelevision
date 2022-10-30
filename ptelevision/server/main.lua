@@ -19,6 +19,7 @@ function SetTelevision(coords, key, value, update)
         Televisions[index][key] = value
     end
     Televisions[index].coords = coords
+    Televisions[index].update_time = os.time()
     if (update) then
         TriggerClientEvent("ptelevision:event", -1, Televisions, index, key, value)
     end
@@ -52,6 +53,12 @@ function SetChannel(source, data)
     end
 end
 
+RegisterNetEvent("ptelevision:requestSync", function(coords) 
+    local _source = source
+    local index, data = GetTelevision(coords)
+    TriggerClientEvent("ptelevision:requestSync", _source, coords, {current_time = os.time()})
+end)
+
 RegisterNetEvent("ptelevision:event", function(data, key, value) 
     local _source = source
     Config.Events.ScreenInteract(_source, data, key, value, function()
@@ -74,29 +81,8 @@ RegisterNetEvent("ptelevision:requestUpdate", function()
     })
 end)
 
-AddEventHandler('onResourceStop', function(name)
-    if name == GetCurrentResourceName() then
-        for i=1, #Locations do 
-            local data = Locations[i]
-            if (DoesEntityExist(Locations[i].obj)) then 
-                DeleteEntity(Locations[i].obj)
-            end
-        end
-    end
-end)
-
 AddEventHandler('playerDropped', function(reason)
     local _source = source
     SetChannel(_source, nil)
 end)
 
-Citizen.CreateThread(function()
-    Citizen.Wait(1000)
-    local locations = Config.Locations
-    for i=1, #locations do 
-        local data = locations[i]
-        local obj = CreateObject(data.Model, data.Position.x, data.Position.y, data.Position.z, true)
-        SetEntityHeading(obj, data.Position.w)
-        table.insert(Locations, {data = data, obj = obj})
-    end
-end)

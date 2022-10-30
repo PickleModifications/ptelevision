@@ -70,33 +70,14 @@ function ShowScreen(data)
 
     PopScaleformMovieFunctionVoid()
     Citizen.CreateThread(function()
+        TriggerServerEvent("ptelevision:requestSync", data.coords)
         local tvObj = data.entity
-        
-        local _, status = GetTelevision(data.coords)
-        local _, lstatus = GetTelevisionLocal(data.coords)
         local screenModel = Config.Models[data.model]
-        if status and status["ptv_status"] then 
-            local status = status["ptv_status"]
-            Citizen.Wait(1000)
-            if status.type == "play" and lstatus then
-                if (status.channel and Channels[status.channel]) then 
-                    PlayVideo({url = Channels[status.channel].url, channel = status.channel})
-                elseif (status.url) then
-                    local time
-                    if (lstatus.start_time) then 
-                        time = math.floor((GetGameTimer() - lstatus.start_time) / 1000)
-                    end
-                    PlayVideo({url = status.url, time = time})
-                end
-            elseif (status.type == "browser") then 
-                PlayBrowser({ url = status.url })
-            end
-        end
         while duiObj do
             if (tvObj and sfHandle ~= nil and HasScaleformMovieLoaded(sfHandle)) then
                 local pos = GetEntityCoords(tvObj)
                 local scale = screenModel.Scale
-                local offset = GetOffsetFromEntityInWorldCoords(tvObj, -1.02, -0.055, 1.04)
+                local offset = GetOffsetFromEntityInWorldCoords(tvObj, screenModel.Offset.x, screenModel.Offset.y, screenModel.Offset.z)
                 local hz = GetEntityHeading(tvObj)
                 DrawScaleformMovie_3dNonAdditive(sfHandle, offset.x, offset.y, offset.z, 0.0, -hz, 0.0, 2.0, 2.0, 2.0, scale * 1, scale * (9/16), 1, 2)
             end
@@ -162,8 +143,29 @@ Citizen.CreateThread(function()
         local data = GetClosestScreen()
         if (data and not duiObj) then 
             ShowScreen(data)
-        elseif ((not data or #(vec3(CURRENT_SCREEN.coords) - vec3(data.coords)) > 0.01 ) and duiObj) then
+        elseif ((not data or #(v3(CURRENT_SCREEN.coords) - v3(data.coords)) > 0.01 ) and duiObj) then
             HideScreen()
+        end
+        Citizen.Wait(wait)
+    end
+end)
+
+Citizen.CreateThread(function()
+    while true do 
+        local wait = 2500
+        local locations = Config.Locations
+        for i=1, #locations do 
+            local data = locations[i]
+            local dist = #(GetEntityCoords(PlayerPedId()) - v3(data.Position)) 
+            if not locations[i].obj and dist < 20.0 then 
+                LoadModel(data.Model)
+                locations[i].obj = CreateObject(data.Model, data.Position.x, data.Position.y, data.Position.z)
+                SetEntityHeading(locations[i].obj, data.Position.w)
+                FreezeEntityPosition(locations[i].obj, true)
+            elseif locations[i].obj and dist > 20.0 then
+                DeleteEntity(locations[i].obj)
+                locations[i].obj = nil
+            end
         end
         Citizen.Wait(wait)
     end
@@ -173,6 +175,30 @@ RegisterNetEvent("ptelevision:requestUpdate", function(data)
     Televisions = data.Televisions
     Channels = data.Channels
 end)
+
+RegisterNetEvent("ptelevision:requestSync", function(coords, data)
+    local tvObj = data.entity
+        
+    local _, status = GetTelevision(coords)
+    local screenModel = Config.Models[data.model]
+    if status and status["ptv_status"] then
+        local update_time = status.update_time 
+        local status = status["ptv_status"]
+        Citizen.Wait(1000)
+        if status.type == "play" then
+            if (status.channel and Channels[status.channel]) then 
+                PlayVideo({url = Channels[status.channel].url, channel = status.channel})
+            elseif (status.url) then
+                local time = math.floor((data.current_time - update_time) / 1000)
+                PlayVideo({url = status.url, time = time})
+            end
+        elseif (status.type == "browser") then 
+            PlayBrowser({ url = status.url })
+        end
+    end
+end)
+
+
 
 RegisterNUICallback("pageLoaded", function()
     waitForLoad = false

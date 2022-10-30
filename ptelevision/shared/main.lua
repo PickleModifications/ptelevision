@@ -1,5 +1,9 @@
 Televisions = {}
 
+function v3(coord) 
+    return vector3(coord.x, coord.y, coord.z), coord.w
+end
+
 function DumpArray(obj, seen)
     if type(obj) ~= 'table' then return obj end
     if seen and seen[obj] then return seen[obj] end
@@ -12,7 +16,7 @@ end
 
 function GetTelevision(coords)
     for k,v in pairs(Televisions) do 
-        if #(vec3(v.coords) - vec3(coords)) < 0.01 then
+        if #(v3(v.coords) - v3(coords)) < 0.01 then
             return k, v
         end
     end

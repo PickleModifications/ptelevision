@@ -108,6 +108,7 @@ function ShowScreen(data)
 end
 
 function HideScreen()
+    CURRENT_SCREEN = nil
     if (duiObj) then 
         DestroyDui(duiObj)
         SetScaleformMovieAsNoLongerNeeded(sfHandle)

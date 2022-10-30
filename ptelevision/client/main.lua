@@ -190,7 +190,7 @@ RegisterNetEvent("ptelevision:requestSync", function(coords, data)
             if (status.channel and Channels[status.channel]) then 
                 PlayVideo({url = Channels[status.channel].url, channel = status.channel})
             elseif (status.url) then
-                local time = math.floor((data.current_time - update_time) / 1000)
+                local time = math.floor(data.current_time - update_time)
                 PlayVideo({url = status.url, time = time})
             end
         elseif (status.type == "browser") then 

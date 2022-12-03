@@ -1,7 +1,7 @@
 fx_version "cerulean"
 game "gta5"
 author "Pickle Mods#0001"
-
+version "v1.2.0"
 ui_page "html/blank.html"
 
 files { 

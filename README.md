@@ -16,7 +16,9 @@ With this resource, you will be able to do the following:
 
 You will need the following for this script to work.
 
-- Ox Lib (works with any framework)
+- [Ox Lib](https://github.com/overextended/ox_lib/releases) (works with any framework)
+
+- [Renderer](https://forum.cfx.re/t/release-generic-dui-2d-3d-renderer/131208) (works with any framework)
 
 If you want to make a fork, please obtain permission with a valid reason.
 

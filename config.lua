@@ -27,9 +27,11 @@ Config.BannedWords = {
 
 Config.Events = { -- Events for approving broadcasts / interactions (due to popular demand).
     ScreenInteract = function(source, data, key, value, cb) -- cb() to approve. 
-        for i=1, #Config.BannedWords do 
-            if string.find(value.url, Config.BannedWords) then 
-                return
+        if value.url then 
+            for i=1, #Config.BannedWords do 
+                if string.find(value.url, Config.BannedWords[i]) then 
+                    return
+                end
             end
         end
         cb()

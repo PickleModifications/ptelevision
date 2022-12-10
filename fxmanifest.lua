@@ -20,7 +20,6 @@ shared_scripts {
 
 client_scripts {
 	"client/cursor.lua",
-	"client/utils.lua",
 	"client/tv.lua",
 	"client/dui.lua",
 	"client/main.lua",

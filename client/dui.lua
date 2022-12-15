@@ -9,8 +9,20 @@ function CreateNamedRenderTargetForModel(name, model)
 	if IsNamedRendertargetRegistered(name) then
 		handle = GetNamedRendertargetRenderId(name)
 	end
-
 	return handle
+end
+
+function RequestTextureDictionary(dict)
+	RequestStreamedTextureDict(dict)
+	while not HasStreamedTextureDictLoaded(dict) do Wait(0) end
+	return dict
+end
+
+function LoadModel(model)
+	if not IsModelInCdimage(model) then return end
+	RequestModel(model)
+	while not HasModelLoaded(model) do Wait(0) end
+	return model
 end
 
 function RenderScaleformTV(renderTarget, scaleform, entity)
@@ -24,3 +36,4 @@ function RenderScaleformTV(renderTarget, scaleform, entity)
     SetTextRenderId(GetDefaultScriptRendertargetRenderId()) -- reset
     SetScriptGfxDrawBehindPausemenu(0)
 end
+

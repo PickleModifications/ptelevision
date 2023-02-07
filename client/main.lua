@@ -209,8 +209,9 @@ end)
 
 
 
-RegisterNUICallback("pageLoaded", function()
+RegisterNUICallback("pageLoaded", function(cb)
     waitForLoad = false
+    if cb then cb() end
 end)
 
 AddEventHandler('onResourceStop', function(name)

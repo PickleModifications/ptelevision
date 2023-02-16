@@ -130,7 +130,7 @@ Config.Locations = { -- REMOVE ALL IF NOT USING ONESYNC, OR IT SHALL BREAK.
 }
 
 Config.Channels = { -- These channels are default channels and cannot be overriden.
-    {name = "Pickle Mods", url = "twitch.tv/picklemods"},
+    {name = "Twitch", url = "twitch.tv/twitch"},
 }
 
 Config.BannedWords = {

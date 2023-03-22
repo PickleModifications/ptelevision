@@ -105,8 +105,8 @@ function SetVolume(volume) {
             player.setVolume(volume / 100.0);
         }
         else if (playerData.type == "youtube") {
-            player.setVolume(volume);
             player.unMute();
+            player.setVolume(volume);
         }
     }
 }
